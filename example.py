@@ -58,10 +58,16 @@ URL_REGEX = r'(?:.*\s+|)' \
     '([a-z0-9\.-]+)\.([a-z\.]{2,6})(/\w\.-]*)*([/a-z0-9\.-_%]+)?)' \
     '(?:.*\s+|)'
 
+from readability.readability import Document
+import urllib
 
+@threaded
 @match(regex=URL_REGEX)
 def url_matcher(event, url, *args, **kwargs):
-    return "> " + url
+    html = urllib.urlopen(url).read()
+    readable_title = Document(html).short_title().encode("ascii", "ignore")
+
+    return "> " + url + " > " + readable_title
 
 
 class TestPlugin(BotPlugin):
