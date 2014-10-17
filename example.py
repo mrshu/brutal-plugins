@@ -43,6 +43,12 @@ def test_event_parser(event):
            'body' in event.meta)
 
 
+@event
+def auto_welcome(event):
+    if event.event_type == 'join':
+        return event.meta['nick'] + ': hi!'
+
+
 @match(regex=r'^hi$')
 def matcher(event):
     return 'Hello to you!'
@@ -61,7 +67,7 @@ def url_matcher(event, url, *args, **kwargs):
 class TestPlugin(BotPlugin):
 
     def setup(self, *args, **kwargs):
-        print(self.log)
+        # print(self.log)
         self.log.debug('SETUP CALLED')
 
         self.log.debug('config: {0!r}'.format(self.config))
