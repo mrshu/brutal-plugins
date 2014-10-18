@@ -54,7 +54,7 @@ def auto_welcome(event):
 def matcher(event):
     return 'Hello to you!'
 
-URL_REGEX = '(https?|ftp)://[^\s/$.?#].[^\s]*'
+URL_REGEX = '((:?https?|ftp)://[^\s/$.?#].[^\s]*)'
 
 from readability.readability import Document
 import urllib
@@ -70,6 +70,7 @@ def url_matcher(event, url, *args, **kwargs):
     readable_article = Document(html).summary().encode("ascii", "ignore")
     readable_article = TAG_RE.sub('', readable_article)
     readable_article = WHITESPACE_RE.sub(' ', readable_article)
+    readable_article = readable_article.replace('\n', ' ')
 
     if len(readable_article) > 75:
         readable_article = readable_article[:75] + '...'
