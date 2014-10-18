@@ -54,10 +54,7 @@ def auto_welcome(event):
 def matcher(event):
     return 'Hello to you!'
 
-URL_REGEX = r'(?:.*\s+|)' \
-    '((https?:\/\/)?' \
-    '([a-z0-9\.-]+)\.([a-z\.]{2,6})(/\w\.-]*)*([/a-z0-9\.-_%]+)?)' \
-    '(?:.*\s+|)'
+URL_REGEX = '(https?|ftp)://[^\s/$.?#].[^\s]*'
 
 from readability.readability import Document
 import urllib
