@@ -67,7 +67,7 @@ WHITESPACE_RE = re.compile(r'\s\s+')
 @match(regex=URL_REGEX)
 def url_matcher(event, url, *args, **kwargs):
     html = urllib.urlopen(url).read()
-    readable_article = Document(html).summary().encode("ascii", "ignore")
+    readable_article = Document(html).summary().encode("utf-8")
     readable_article = TAG_RE.sub('', readable_article)
     readable_article = WHITESPACE_RE.sub(' ', readable_article)
     readable_article = readable_article.replace('\n', ' ')
@@ -75,7 +75,7 @@ def url_matcher(event, url, *args, **kwargs):
     if len(readable_article) > 75:
         readable_article = readable_article[:75] + '...'
 
-    readable_title = Document(html).short_title().encode("ascii", "ignore")
+    readable_title = Document(html).short_title().encode("utf-8")
 
     return "> " + url + " > " + readable_title + " > " + readable_article
 
