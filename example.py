@@ -3,7 +3,6 @@ Examples of brutal plugins. Primarily used for testing.
 """
 
 import time
-import re
 from brutal.core.plugin import BotPlugin, cmd, event, match, threaded
 
 
@@ -53,31 +52,6 @@ def auto_welcome(event):
 @match(regex=r'^hi$')
 def matcher(event):
     return 'Hello to you!'
-
-URL_REGEX = '((:?https?|ftp)://[^\s/$.?#].[^\s]*)'
-
-from readability.readability import Document
-import urllib
-
-TAG_RE = re.compile(r'<[^>]+>')
-WHITESPACE_RE = re.compile(r'\s\s+')
-
-
-@threaded
-@match(regex=URL_REGEX)
-def url_matcher(event, url, *args, **kwargs):
-    html = urllib.urlopen(url).read()
-    readable_article = Document(html).summary().encode("utf-8")
-    readable_article = TAG_RE.sub('', readable_article)
-    readable_article = WHITESPACE_RE.sub(' ', readable_article)
-    readable_article = readable_article.replace('\n', ' ')
-
-    if len(readable_article) > 75:
-        readable_article = readable_article[:75] + '...'
-
-    readable_title = Document(html).short_title().encode("utf-8")
-
-    return "> " + url + " > " + readable_title + " > " + readable_article
 
 
 class TestPlugin(BotPlugin):
