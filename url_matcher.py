@@ -2,6 +2,8 @@ from readability.readability import Document
 import urllib
 import re
 
+from brutal.core.plugin import match, threaded
+
 URL_REGEX = '((:?https?|ftp)://[^\s/$.?#].[^\s]*)'
 TAG_RE = re.compile(r'<[^>]+>')
 WHITESPACE_RE = re.compile(r'\s\s+')
