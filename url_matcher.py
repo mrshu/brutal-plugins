@@ -17,6 +17,7 @@ def url_matcher(event, url, *args, **kwargs):
     readable_article = TAG_RE.sub('', readable_article)
     readable_article = WHITESPACE_RE.sub(' ', readable_article)
     readable_article = readable_article.replace('\n', ' ')
+    readable_article = readable_article.replace('&#13;', '')
 
     if len(readable_article) > 75:
         readable_article = readable_article[:75] + '...'
