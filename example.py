@@ -43,12 +43,6 @@ def test_event_parser(event):
            'body' in event.meta)
 
 
-@event
-def auto_welcome(event):
-    if event.event_type == 'join':
-        return event.meta['nick'] + ': hi!'
-
-
 @match(regex=r'^hi$')
 def matcher(event):
     return 'Hello to you!'
