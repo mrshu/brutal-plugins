@@ -7,12 +7,6 @@ from brutal.core.plugin import BotPlugin, cmd, event, match, threaded
 
 
 @cmd
-def ping(event):
-    print (event.meta)
-    return 'pong, got {0!r}'.format(vars(event))
-
-
-@cmd
 def pingni_ma(event):
     print (event.meta)
     return '{1}: pong, got {0!r}'.format(vars(event), event.meta['nick'])

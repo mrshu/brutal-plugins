@@ -2,14 +2,14 @@
 from brutal.core.plugin import BotPlugin, cmd, event, match, threaded
 
 
-@@cmd
+@cmd
 def ping(event):
     return 'pong'
 
 
 @cmd
 def echo(event):
-    return event.meta['body']
+    return ' '.join(event.args)
 
 
 @event
