@@ -35,20 +35,10 @@ def mhd_match(event, f, t, *args, **kwargs):
     if len(args) >= 4:
         date = args[3]
 
-    probable_r = []
-    probable_r.append(imhdsk.routes(f, t, time=time, date=date))
-    if len(probable_r[0]) == 0:
-        updated_f = rootify(f)
-        probable_r.append(imhdsk.routes(updated_f, t, time=time, date=date))
-        updated_t = rootify(t)
-        probable_r.append(imhdsk.routes(f, updated_t, time=time, date=date))
-        probable_r.append(imhdsk.routes(updated_f, updated_t,
-                                        time=time, date=date))
+    f = imhdsk.clear_stop(imhdsk.suggest(rootify(f.split(' ')[0]))[0]['name'])
+    t = imhdsk.clear_stop(imhdsk.suggest(rootify(t.split(' ')[0]))[0]['name'])
 
-    r = probable_r[0]
-    for results in probable_r:
-        if len(results) > len(r):
-            r = results
+    r = imhdsk.routes(f, t, time=time, date=date)
 
     out = r[0].__repr__()
     out = unicode(out.strip(codecs.BOM_UTF8), 'utf-8')
