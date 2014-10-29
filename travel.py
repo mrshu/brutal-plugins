@@ -53,6 +53,14 @@ def mhd(event):
     if len(args) < 2:
         return
 
+    args = list(args)
+
+    print (args)
+
+    if '-' in args:
+        a = ' '.join(args)
+        args = a.split('-')
+
     f = args[0]
     t = args[1]
 
