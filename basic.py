@@ -16,10 +16,10 @@ def echo(event):
 
 
 welcomes = {
-    'LordPotato_': 'All praise the mighty LordPotato_!',
-    'pepol': 'Nazimod sighted, take cover!',
-    'mrshu': 'Nazireviewer is here, hide your code!',
-    'jn_': 'Swiggidy swooty, Im comin for dat booty!'
+    'LordPotato_': "All praise the mighty LordPotato_!",
+    'pepol': "Nazimod sighted, take cover!",
+    'mrshu': "Nazireviewer is here, hide your code!",
+    'jn_': "Swiggidy swooty, he's comin for dat booty!"
 }
 
 @event
