@@ -24,5 +24,5 @@ def auto_welcome(event):
         'jn_': 'Swiggidy swooty, Im comin for dat booty!'
     }
     if event.event_type == 'join':
-    	if event.meta['nick'] in welcomes['nick']:
-            return welcomes['nick']
+    	if event.meta['nick'] in welcomes:
+            return welcomes[event.meta['nick']]
