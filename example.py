@@ -42,6 +42,15 @@ def matcher(event):
     return 'Hello to you!'
 
 
+@match(regex=r'^sieg$')
+def nazi(event):
+    return 'hiel!' //hiel aby sme nesli do vezenia
+
+@event
+def potato(event):
+    if event.event_type == 'join' and event.meta['nick'] == 'LordPotato_':
+        return 'praise the mighty LordPotato_'
+
 class TestPlugin(BotPlugin):
 
     def setup(self, *args, **kwargs):
