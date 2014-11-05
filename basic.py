@@ -27,4 +27,4 @@ def auto_welcome(event):
     	if event.meta['nick'] in welcomes:
             return welcomes[event.meta['nick']]
         else:
-            return 'hi'
+            return event.meta['nick'] + ': hi!'
