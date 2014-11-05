@@ -18,4 +18,7 @@ def echo(event):
 @event
 def auto_welcome(event):
     if event.event_type == 'join':
+        # TODO: Generalise personalised autowelcome.
+    	if event.meta['nick'] == 'LordPotato_':
+            return 'praise the mighty LordPotato_'
         return event.meta['nick'] + ': hi!'

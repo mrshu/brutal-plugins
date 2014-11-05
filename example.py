@@ -42,6 +42,11 @@ def matcher(event):
     return 'Hello to you!'
 
 
+@match(regex=r'^sieg$')
+def nazi(event):
+    return 'hiel!' # "hiel" so we dont go to jail
+
+
 class TestPlugin(BotPlugin):
 
     def setup(self, *args, **kwargs):
