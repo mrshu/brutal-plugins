@@ -17,8 +17,12 @@ def echo(event):
 
 @event
 def auto_welcome(event):
+    welcomes = {
+        'LordPotato_': 'All praise the mighty LordPotato_!',
+        'pepol': 'Nazimod sighted, take cover!',
+        'mrshu': 'Nazireviewer is here, hide your code!',
+        'jn_': 'Swiggidy swooty, Im comin for dat booty!'
+    }
     if event.event_type == 'join':
-        # TODO: Generalise personalised autowelcome.
-    	if event.meta['nick'] == 'LordPotato_':
-            return 'praise the mighty LordPotato_'
-        return event.meta['nick'] + ': hi!'
+    	if event.meta['nick'] in welcomes['nick']:
+            return welcomes['nick']
