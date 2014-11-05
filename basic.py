@@ -15,14 +15,15 @@ def echo(event):
     return ' '.join(event.args)
 
 
+welcomes = {
+    'LordPotato_': 'All praise the mighty LordPotato_!',
+    'pepol': 'Nazimod sighted, take cover!',
+    'mrshu': 'Nazireviewer is here, hide your code!',
+    'jn_': 'Swiggidy swooty, Im comin for dat booty!'
+}
+
 @event
 def auto_welcome(event):
-    welcomes = {
-        'LordPotato_': 'All praise the mighty LordPotato_!',
-        'pepol': 'Nazimod sighted, take cover!',
-        'mrshu': 'Nazireviewer is here, hide your code!',
-        'jn_': 'Swiggidy swooty, Im comin for dat booty!'
-    }
     if event.event_type == 'join':
     	if event.meta['nick'] in welcomes:
             return welcomes[event.meta['nick']]
