@@ -26,3 +26,5 @@ def auto_welcome(event):
     if event.event_type == 'join':
     	if event.meta['nick'] in welcomes:
             return welcomes[event.meta['nick']]
+        else:
+            return 'hi'
