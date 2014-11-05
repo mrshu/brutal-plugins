@@ -46,10 +46,6 @@ def matcher(event):
 def nazi(event):
     return 'hiel!' # "hiel" so we dont go to jail
 
-@event
-def potato(event):
-    if event.event_type == 'join' and event.meta['nick'] == 'LordPotato_':
-        return 'praise the mighty LordPotato_'
 
 class TestPlugin(BotPlugin):
 
