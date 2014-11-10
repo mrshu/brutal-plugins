@@ -14,6 +14,14 @@ def echo(event):
     """Echoes back the message it recieves."""
     return ' '.join(event.args)
 
+@cmd
+def sudo(event):
+    return 'okay.'
+
+@cmd
+def make(event):
+    return 'what? make it yourself.'
+
 
 welcomes = {
     "LordPotato_": "Everybody on your knees and let's praise the mighty Potato!",
