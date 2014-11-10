@@ -16,10 +16,12 @@ def echo(event):
 
 @cmd
 def sudo(event):
+    """Responds 'okay.' to your 'sudo ...' (http://xkcd.com/149/)."""
     return 'okay.'
 
 @cmd
 def make(event):
+    """Tells user to go make it himself (http://xkcd.com/149/')."""
     return 'what? make it yourself.'
 
 
