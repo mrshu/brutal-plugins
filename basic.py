@@ -14,6 +14,16 @@ def echo(event):
     """Echoes back the message it recieves."""
     return ' '.join(event.args)
 
+@cmd
+def sudo(event):
+    """Responds 'okay.' to your 'sudo ...' (http://xkcd.com/149/)."""
+    return 'okay.'
+
+@cmd
+def make(event):
+    """Tells user to go make it himself (http://xkcd.com/149/')."""
+    return 'what? make it yourself.'
+
 
 welcomes = {
     "LordPotato_": "Everybody on your knees and let's praise the mighty Potato!",
