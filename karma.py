@@ -27,7 +27,7 @@ def karma(event):
     args = event.args
     if len(args) < 1:
         return "{0}'s karma level is: {1}".format(event.meta['nick'], 
-                                        karmas[event.meta['nick']])
+                                                  karmas[event.meta['nick']])
     
     user = event.args[0]
 
