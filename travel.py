@@ -48,6 +48,8 @@ def mhd_match(event, f, t, *args, **kwargs):
 @threaded
 @cmd
 def mhd(event):
+    """Get the next BA MHD from A to B by running !mhd A B"""
+
     args = event.args
 
     if len(args) < 2:
