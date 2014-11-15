@@ -34,3 +34,20 @@ def karma(event):
     if user not in karmas:
         karmas[user] = 0
     return "{0}'s karma level is: {1}".format(user, karmas[user])
+
+
+@cmd
+def top_karma(event):
+    """Returns 5 people with most karma points."""
+    output = ""
+    karmees = sorted([(value,key) for (key,value) in karmas.items()], 
+                     reverse=True)
+    # Takes top 5 or less if len(karmees) < 5
+    karmees = karmees[:5]
+
+    position = 1
+    for k, v in karmees:
+        output += "{0}. {1} with {2}\n".format(position, v, k)
+        position += 1
+
+    return output
