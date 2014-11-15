@@ -36,17 +36,18 @@ def karma(event):
     return "{0}'s karma level is: {1}".format(user, karmas[user])
 
 
-@match(regex=r'^;;$')
-def karma_top(event):
-    top5 = ""
-    c = 1
+@cmd
+def top_karma(event):
+    """Returns 5 people with most karma points."""
+    output = ""
     karmees = sorted([(value,key) for (key,value) in karmas.items()], 
-                                                                  reverse=True)
+                     reverse=True)
+    # Takes top 5 or less if len(karmees) < 5
+    karmees = karmees[:5]
 
+    position = 1
     for k, v in karmees:
-        if c > 5:
-            break
-        top5 += "{0}. {1} with {2}\n".format(c, v, k)
-        c += 1
+        output += "{0}. {1} with {2}\n".format(position, v, k)
+        position += 1
 
-    return top5
+    return output
