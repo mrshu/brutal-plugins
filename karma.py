@@ -34,3 +34,19 @@ def karma(event):
     if user not in karmas:
         karmas[user] = 0
     return "{0}'s karma level is: {1}".format(user, karmas[user])
+
+
+@match(regex=r'^;;$')
+def karma_top(event):
+    top5 = ""
+    c = 1
+    karmees = sorted([(value,key) for (key,value) in karmas.items()], 
+                                                                  reverse=True)
+
+    for k, v in karmees:
+        if c > 5:
+            break
+        top5 += "{0}. {1} with {2}\n".format(c, v, k)
+        c += 1
+
+    return top5
