@@ -12,6 +12,7 @@ def karma_inc(event, name, pluses, *args):
     else:
         karmas[name] += len(pluses)//2
 
+
 @match(regex=r'^([a-zA-Z0-9_]+)((:?\-)+)$')
 def karma_dec(event, name, minuses, *args):
     if name == event.meta['nick']:
@@ -39,7 +40,7 @@ def karma(event):
 def top_karma(event):
     """Returns 5 people with most karma points."""
     output = ""
-    karmees = sorted([(value,key) for (key,value) in karmas.items()],
+    karmees = sorted([(value, key) for (key, value) in karmas.items()],
                      reverse=True)
     # Takes top 5 or less if len(karmees) < 5
     karmees = karmees[:5]
