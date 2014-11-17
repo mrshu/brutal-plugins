@@ -11,7 +11,6 @@ def karma_inc(event, name, pluses, *args):
         return 'Not in this universe, maggot!'
     else:
         karmas[name] += len(pluses)//2
-    
 
 @match(regex=r'^([a-zA-Z0-9_]+)((:?\-)+)$')
 def karma_dec(event, name, minuses, *args):
@@ -26,9 +25,9 @@ def karma(event):
     """Returns karma points for a given user."""
     args = event.args
     if len(args) < 1:
-        return "{0}'s karma level is: {1}".format(event.meta['nick'], 
+        return "{0}'s karma level is: {1}".format(event.meta['nick'],
                                                   karmas[event.meta['nick']])
-    
+
     user = event.args[0]
 
     if user not in karmas:
@@ -40,14 +39,12 @@ def karma(event):
 def top_karma(event):
     """Returns 5 people with most karma points."""
     output = ""
-    karmees = sorted([(value,key) for (key,value) in karmas.items()], 
+    karmees = sorted([(value,key) for (key,value) in karmas.items()],
                      reverse=True)
     # Takes top 5 or less if len(karmees) < 5
     karmees = karmees[:5]
 
-    position = 1
-    for k, v in karmees:
-        output += "{0}. {1} with {2}\n".format(position, v, k)
-        position += 1
+    for pos, (k, v) in enumerate(karmees):
+        output += "{0}. {1} with {2}\n".format(pos + 1, v, k)
 
     return output
