@@ -25,14 +25,15 @@ def karma_dec(event, name, minuses, *args):
 def karma(event):
     """Returns karma points for a given user."""
     args = event.args
-    if len(args) < 1:
-        return "{0}'s karma level is: {1}".format(event.meta['nick'],
-                                                  karmas[event.meta['nick']])
 
-    user = event.args[0]
+    if len(args) < 1:
+        user = event.meta['nick']
+    else:
+        user = event.args[0]
 
     if user not in karmas:
         karmas[user] = 0
+
     return "{0}'s karma level is: {1}".format(user, karmas[user])
 
 
