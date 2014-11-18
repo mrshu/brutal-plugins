@@ -46,7 +46,7 @@ def top_karma(event):
     # Takes top 5 or less if len(karmees) < 5
     karmees = karmees[:5]
 
-    for pos, (k, v) in enumerate(karmees):
-        output += "{0}. {1} with {2}\n".format(pos + 1, v, k)
+    for pos, (k, v) in enumerate(karmees, start=1):
+        output += "{0}. {1} with {2}\n".format(pos, v, k)
 
     return output
