@@ -1,6 +1,9 @@
 
 from brutal.core.plugin import BotPlugin, cmd
 
+BAD_REQ = "Not a valid countdown request, try again!"
+LOW_DELAY_MSG = "Requested delay is too low. Setting lowest possible(30)."
+
 class Countdown(BotPlugin):
     counter = 0
     # countdown_delay represented in seconds
@@ -12,9 +15,6 @@ class Countdown(BotPlugin):
     def countdown(self, event):
         """Creates countdowner that will count down from a specified value down 
            to 0 adn then reminds you the time is up."""
-
-        BAD_REQ = "Not a valid countdown request, try again!"
-        LD_MSG = "Requested delay is too low. Setting lowest possible(30)."
 
         if len(event.args) < 2:
             return BAD_REQ
@@ -30,9 +30,9 @@ class Countdown(BotPlugin):
             if not task_arg:
                 return BAD_REQ
             else:
-                # Setting delay to at least 30seconds prevents too much spam.
+                # Setting delay to at least 30 seconds prevents too much spam.
                 if int(second_arg) < 30:
-                    self.msg(LD_MSG, event=event)
+                    self.msg(LOW_DELAY_MSG, event=event)
                     self.countdown_delay = 30
                 else:
                     self.countdown_delay = int(second_arg)
