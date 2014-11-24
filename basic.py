@@ -43,3 +43,33 @@ def auto_welcome(event):
             return welcomes[event.meta['nick']]
         else:
             return event.meta['nick'] + ': hi!'
+
+
+# math functions need to be imported at runtime
+from math import *
+safe_list = ['acos', 'abs', 'asin', 'atan', 'atan2', 'ceil', 'cos', 'cosh',
+             'degrees', 'e', 'exp', 'fabs', 'floor', 'fmod', 'frexp', 'hypot',
+             'ldexp', 'log', 'log10', 'modf', 'pi', 'pow', 'radians', 'sin',
+             'sinh', 'sqrt', 'tan', 'tanh']
+safe_dict = dict([(k, locals().get(k, None)) for k in safe_list])
+
+
+@cmd(command='^eval')
+def eval_(event):
+    # the name eval_ is used in order to avoid clashing with the built-in eval
+    # function which is actually how the eval command is implemented.
+
+    """Evaluates user specified (mathematical) expression.
+
+    Usage:
+
+        !eval [input ...]
+
+    Examples:
+
+        !eval 5**2
+        > 25
+    """
+
+    input = ' '.join(event.args)
+    return eval(input, {"__builtins__": None}, safe_dict)
