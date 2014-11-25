@@ -57,11 +57,9 @@ def mhd(event):
 
     args = list(args)
 
-    print (args)
-
     if '-' in args:
         a = ' '.join(args)
-        args = a.split('-')
+        args = map(lambda x: x.strip(), a.split('-'))
 
     f = args[0]
     t = args[1]
