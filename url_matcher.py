@@ -1,5 +1,5 @@
 from readability.readability import Document
-import urllib
+import requests
 import re
 
 from brutal.core.plugin import match, threaded
@@ -12,7 +12,7 @@ WHITESPACE_RE = re.compile(r'\s\s+')
 @threaded
 @match(regex=URL_REGEX)
 def url_matcher(event, url, *args, **kwargs):
-    html = urllib.urlopen(url).read()
+    html = requests.get(url).text
     readable_article = Document(html).summary().encode("utf-8")
     readable_article = TAG_RE.sub('', readable_article)
     readable_article = WHITESPACE_RE.sub(' ', readable_article)
