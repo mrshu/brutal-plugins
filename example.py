@@ -55,6 +55,8 @@ class TestPlugin(BotPlugin):
 
         self.log.debug('config: {0!r}'.format(self.config))
 
+        self.storage = self.open_storage('test')
+
         self.counter = 0
         # self.loop_task(5, self.test_loop, now=False)
         # self.delay_task(10, self.future_task)
@@ -96,9 +98,20 @@ class TestPlugin(BotPlugin):
         time.sleep(5)
         return 'done sleeping!'
 
+    @cmd
+    def setter(self, event):
+        if len(event.args) >= 2:
+            self.storage[event.args[0]] = event.args[1]
+
+    @cmd
+    def getter(self, event):
+        if len(event.args) >= 1:
+            return self.storage[event.args[0]]
+
     @cmd(thread=True)
     def notify(self, event):
         args = event.args
+
         if len(args) < 2:
             return 'Sorry sir, I don\'t understand,' \
                    ' you gave me too few arguments'
