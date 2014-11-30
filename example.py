@@ -44,7 +44,8 @@ def matcher(event):
 
 @match(regex=r'^sieg$')
 def nazi(event):
-    return 'hiel!' # "hiel" so we dont go to jail
+    # "hiel" so we dont go to jail
+    return 'hiel!'
 
 
 class TestPlugin(BotPlugin):
