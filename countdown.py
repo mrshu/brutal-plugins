@@ -1,15 +1,18 @@
-
 from brutal.core.plugin import BotPlugin, cmd
 
 BAD_REQ = "Not a valid countdown request, try again!"
 LOW_DELAY_MSG = "Requested delay is too low. Setting lowest possible(30)."
+TEN_MINUTES = 600
+ONE_MINUTE = 60
+TEN_SECONDS = 10
+
 
 class Countdown(BotPlugin):
     counter = 0
-    delay_above_ten = 300
-    delay_min = 60
-    delay_sec = 10
-    delay_last_ten = 1
+    DELAY_ABOVE_TEN = 300
+    DELAY_MIN = 60
+    DELAY_SEC = 10
+    DELAY_LAST_TEN = 1
     text = ""
 
     @cmd
@@ -22,10 +25,11 @@ class Countdown(BotPlugin):
         if not event.args[0].isdigit():
             return BAD_REQ
         # countdown time
-        if int(event.args[0]) <= 1:
+        c_time = int(event.args[0])
+        if c_time <= 1:
             return BAD_REQ
         else:
-            self.counter = int(event.args[0]) * 60
+            self.counter = c_time*60
         # countdown text
         task_arg = event.args[1:]
         if not task_arg:
@@ -33,48 +37,54 @@ class Countdown(BotPlugin):
         else:
             self.text = ' '.join(task_arg)
 
-        if self.counter > self.delay_above_ten:
-            self.delay_task(self.delay_above_ten, self.decrementer, event=event)
-        elif self.counter > self.delay_min:
-            self.delay_task(self.delay_min, self.decrementer, event=event)
-        elif self.counter == self.delay_min:
-            self.delay_task(self.delay_sec, self.decrementer, event=event)
+        if self.counter > TEN_MINUTES:
+            self.delay_task(self.DELAY_ABOVE_TEN,
+                            self.decrementer,
+                            event=event)
+        elif TEN_MINUTES >= self.counter > ONE_MINUTE:
+            self.delay_task(self.DELAY_MIN, self.decrementer, event=event)
+        elif ONE_MINUTE >= self.counter > TEN_SECONDS:
+            self.delay_task(self.DELAY_SEC, self.decrementer, event=event)
 
-        return "Starting {0}min coundtown for {1}".format(self.counter // 60,
+        return "Starting {0}min countdown for {1}".format(self.counter // 60,
                                                           self.text)
 
-
     def decrementer(self, event):
-        if self.counter > self.delay_above_ten:
-            self.counter -= self.delay_above_ten
-        elif self.delay_above_ten >= self.counter > self.delay_min:
-            self.counter -= self.delay_min
-        elif self.delay_min >= self.counter > self.delay_sec:
-            self.counter -= self.delay_sec
-        elif self.delay_sec >= self.counter:
-            self.counter -= self.delay_last_ten
+        if self.counter > TEN_MINUTES:
+            self.counter -= self.DELAY_ABOVE_TEN
+        elif TEN_MINUTES >= self.counter > ONE_MINUTE:
+            self.counter -= self.DELAY_MIN
+        elif ONE_MINUTE >= self.counter > TEN_SECONDS:
+            self.counter -= self.DELAY_SEC
+        elif TEN_SECONDS >= self.counter:
+            self.counter -= self.DELAY_LAST_TEN
 
         if self.counter != 0:
-            if self.counter > self.delay_above_ten:
-                self.msg("T-{0}min ({1})".format(self.counter // 60,
-                                                       self.text), event=event)
-                self.delay_task(self.delay_above_ten, self.decrementer, 
+            if self.counter > TEN_MINUTES:
+                self.msg(self.format_msg("min"), event=event)
+                self.delay_task(self.DELAY_ABOVE_TEN, self.decrementer,
                                 event=event)
 
-            elif self.delay_above_ten >= self.counter > self.delay_min:
-                self.msg("T-{0}min ({1})".format(self.counter // 60,
-                                                       self.text), event=event)
-                self.delay_task(self.delay_min, self.decrementer, event=event)
+            elif TEN_MINUTES >= self.counter > ONE_MINUTE:
+                self.msg(self.format_msg("min"), event=event)
+                self.delay_task(self.DELAY_MIN, self.decrementer, event=event)
 
-            elif self.delay_min >= self.counter > self.delay_sec:
-                self.msg("T-{0}sec ({1})".format(self.counter, self.text),
-                         event=event)
-                self.delay_task(self.delay_sec, self.decrementer, event=event)
+            elif ONE_MINUTE >= self.counter > TEN_SECONDS:
+                self.msg(self.format_msg("sec"), event=event)
+                self.delay_task(self.DELAY_SEC, self.decrementer, event=event)
 
-            elif self.delay_sec >= self.counter:
-                self.msg("T-{0}sec ({1})".format(self.counter, self.text),
-                         event=event)
-                self.delay_task(self.delay_last_ten, self.decrementer, 
+            elif TEN_SECONDS >= self.counter:
+                self.msg(self.format_msg("sec"), event=event)
+                self.delay_task(self.DELAY_LAST_TEN, self.decrementer,
                                 event=event)
         else:
             self.msg("{0} is happening!".format(self.text), event=event)
+
+    def format_msg(self, time_unit):
+        """Returns countdown message with 'self.counter' seconds or
+           'self.counter' minutes depending on 'time_unit'."""
+        if time_unit == "sec":
+            return "T-{0}{1} ({2})".format(self.counter, time_unit, self.text)
+        elif time_unit == "min":
+            return "T-{0}{1} ({2})".format(self.counter // 60, time_unit,
+                                           self.text)
