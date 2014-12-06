@@ -29,7 +29,7 @@ class Countdown(BotPlugin):
         if c_time <= 1:
             return BAD_REQ
         else:
-            self.counter = c_time*60
+            self.counter = c_time * 60
         # countdown text
         task_arg = event.args[1:]
         if not task_arg:
