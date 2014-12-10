@@ -127,7 +127,7 @@ def cpsk_match(event, departure, dest, *args):
     routes = cpsk.get_routes(departure, dest, vehicle=vehicle,
                                  time=time, date=date)
 
-    return routes[0].__repr__()
+    return routes[0].__repr__() if len(routes) else "Nothing found"
 
 
 def get_line(event, vehicle):
