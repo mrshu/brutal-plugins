@@ -97,11 +97,16 @@ def cpsk_match(event, departure, dest, *args):
         spoj z KE do Trencin
         zajtra bus z TO do Jacovce
         pozajtra o 20:30 bus z TO do BA
+        20.12.2014 bus z ZA do BA
+        20.12.2014 15:00 vlak z BA do TO
     """
     msg = event.meta['body']
 
+    date_match = re.search("[0-9]+\.[0-9]+\.[0-9]+", msg)
     date = ''
-    if 'zajtra' in msg:
+    if date_match is not None:
+        date = msg[date_match.start():date_match.end()]
+    elif 'zajtra' in msg:
         date = (datetime.date.today() + datetime.timedelta(days=1)) \
                     .strftime("%d.%m.%Y")
     elif 'pozajtra' in msg:
@@ -168,6 +173,6 @@ def vlak(event):
 
     Examples:
         !vlak Kosice Bratislava
-
+        !vlak Kosice - Bratislava - 19:00 - 20.12.2014
     """
     return get_line(event, 'vlak')
