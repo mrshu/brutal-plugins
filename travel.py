@@ -87,7 +87,7 @@ def mhd(event):
 
 
 @threaded
-@match(regex=r'(?:.*\s+|)(?:bus|vlak|spoj)\sz\s([A-Za-z\s]+)\sdo\s([A-Za-z\s]+)(?:.*\s+|)')
+@match(regex=r'(?:.*\s+|)(?:bus|vlak|spoj)\sz\s([A-Za-z\s]+)\sdo\s([A-Za-z\s]+)([0-9.]+)?(\o\s[0-9:]+)?(?:.*\s+|)')
 def cpsk_match(event, departure, dest, *args):
     """Searches for bus or train info in Slovakia.
 
