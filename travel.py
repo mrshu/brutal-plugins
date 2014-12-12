@@ -96,9 +96,9 @@ def cpsk_match(event, departure, dest, *args):
         najblizsi vlak z Topolcany do Prievidza
         spoj z KE do Trencin
         zajtra bus z TO do Jacovce
-        pozajtra o 20:30 bus z TO do BA
-        20.12.2014 bus z ZA do BA
-        20.12.2014 15:00 vlak z BA do TO
+        pozajtra bus z TO do BA o 
+        bus z ZA do BA 20.12.2014
+        vlak z BA do TO 20.12.2014 15:00
     """
     msg = event.meta['body']
 
