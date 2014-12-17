@@ -29,7 +29,7 @@ welcomes = {
     "LordPotato_": "Everybody on your knees and let's praise the mighty Potato!",
     "pepol": "Nazimod sighted, take cover!",
     "mrshu": "Hide yo codes, hide yo wife, nazireviewer is on site!",
-    "jn_": "Swiggidy swooty, he's comin' for dat booty!",
+    "JakubN": "Swiggidy swooty, he's comin' for dat booty!",
     "kalerab" : "Hide your apples, 'cause he's gonna eat 'em!"
 }
 
