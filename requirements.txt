@@ -1,1 +1,4 @@
 readability-lxml
+requests
+cssselect
+cpsk
