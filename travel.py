@@ -23,11 +23,8 @@ def rootify(word):
 
 
 @threaded
-@match(regex='.*bus (?:z|zo) (.*?) (:?do|na) (.+?)(?:\s|$)')
+@match(regex='.*bus (?:z|zo) (.+?) (?:do|na) (.+?)(?:\s|$)')
 def mhd_match(event, f, t, *args, **kwargs):
-    f = f
-    t = args[0]
-
     if f == t:
         return "Not in this universe."
 
