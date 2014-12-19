@@ -23,7 +23,7 @@ def karma_dec(event, name, minuses, *args):
 
 @cmd
 def karma(event):
-    """Returns karma points for a given user."""
+    """Get karma points for a given user."""
     args = event.args
 
     if len(args) < 1:
@@ -39,7 +39,7 @@ def karma(event):
 
 @cmd
 def top_karma(event):
-    """Returns 5 people with most karma points."""
+    """Get 5 people with most karma points."""
     output = ""
     karmees = sorted([(value, key) for (key, value) in karmas.items()],
                      reverse=True)
