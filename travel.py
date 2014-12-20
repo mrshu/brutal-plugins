@@ -79,13 +79,17 @@ def line_match(event, f, t, time=None, date=None, *args):
 
     if f == t:
         return "Not in this universe."
+
     time = '' if time is None else time
     date = '' if date is None else date
 
-    if "zajtra" in msg or "pozajtra" in msg and date is None:
-        delta = 2 if "pozajtra" in msg else 1
+    if ("zajtra" in msg or "pozajtra" in msg) and date is not '':
+        if "pozajtra" in msg:
+            delta = 2
+        elif "zajtra" in msg:
+            delta = 1
         date = (datetime.date.today() + datetime.timedelta(days=delta)) \
-                    .strftime("%d.%m.%Y")
+            .strftime("%d.%m.%Y")
 
     vehicle = "vlakbus"
     if "bus" in msg:
