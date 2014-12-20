@@ -23,11 +23,8 @@ def rootify(word):
 
 
 @threaded
-@match(regex='.*bus (?:z|zo) (.*?) (:?do|na) (.+?)(?:\s|$)')
+@match(regex='.*bus (?:z|zo) (.+?) (?:do|na) (.+?)(?:\s|$)')
 def mhd_match(event, f, t, *args, **kwargs):
-    f = f
-    t = args[0]
-
     if f == t:
         return "Not in this universe."
 
@@ -86,8 +83,16 @@ def mhd(event):
     return out.encode('utf-8')
 
 
+CPSK_REGEX = r'(?:.*\s+|)(?:bus|vlak|spoj)\sz\s([A-Za-z\s]+)' \
+    '\sdo\s([A-Za-z\s]+)(?:.*\s+|)'
+
+
 @threaded
+<<<<<<< HEAD
 @match(regex=r'(?:.*\s+|)(?:bus|vlak|spoj)\sz\s([A-Za-z\s]+)\sdo\s([A-Za-z\s]+)([0-9.]+)?(\o\s[0-9:]+)?(?:.*\s+|)')
+=======
+@match(regex=CPSK_REGEX)
+>>>>>>> bacbd9c6ad0d892c4e44adab7d261a7239440888
 def cpsk_match(event, departure, dest, *args):
     """Searches for bus or train info in Slovakia.
 
@@ -108,10 +113,10 @@ def cpsk_match(event, departure, dest, *args):
         date = msg[date_match.start():date_match.end()]
     elif 'zajtra' in msg:
         date = (datetime.date.today() + datetime.timedelta(days=1)) \
-                    .strftime("%d.%m.%Y")
+            .strftime("%d.%m.%Y")
     elif 'pozajtra' in msg:
         date = (datetime.date.today() + datetime.timedelta(days=2)) \
-                    .strftime("%d.%m.%Y")
+            .strftime("%d.%m.%Y")
 
     time_match = re.search("([0-9]+:[0-9]+)", msg)
     time = ''
@@ -125,7 +130,7 @@ def cpsk_match(event, departure, dest, *args):
         vehicle = 'bus'
 
     routes = cpsk.get_routes(departure, dest, vehicle=vehicle,
-                                 time=time, date=date)
+                             time=time, date=date)
 
     return routes[0].__repr__() if len(routes) else "Nothing found"
 
