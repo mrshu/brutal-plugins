@@ -73,7 +73,7 @@ def line_match(event, f, t, time=None, date=None, *args):
         bus z mlyny na hlst
         vlak z BA do TO
         bus z BA do LM 18:00 20.12.2014
-        spoj z Zochova do mlyny
+        spoj zo Zochova no mlyny
     """
     msg = event.meta["body"]
 
