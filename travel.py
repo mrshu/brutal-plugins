@@ -60,12 +60,12 @@ def mhd(event):
     return out.encode('utf-8')
 
 
-CPSK_REGEX = r'(?:mhd|bus|vlak|spoj)\s(?:z|zo)\s([A-Za-z\s]+)' \
+TRAVEL_REGEX = r'(?:mhd|bus|vlak|spoj)\s(?:z|zo)\s([A-Za-z\s]+)' \
     '\s(?:na|do)\s([A-Za-z\s]+)([0-9]+:[0-9]+)?(\s[0-9.]+)?'
 
 
 @threaded
-@match(regex=CPSK_REGEX)
+@match(regex=TRAVEL_REGEX)
 def line_match(event, f, t, time=None, date=None, *args):
     """Search for mhd in BA or bus/train lines in Slovakia
 
