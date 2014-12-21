@@ -61,7 +61,7 @@ def mhd(event):
 
 
 TRAVEL_REGEX = r'(?:mhd|bus|vlak|spoj)\s(?:z|zo)\s([A-Za-z\s]+)' \
-    '\s(?:na|do)\s([A-Za-z\s]+)([0-9]+:[0-9]+)?(\s[0-9.]+)?'
+    '\s(?:na|do)\s([A-Za-z\s]+)([\d]+:[\d]+)?(\s[\d\.]+)?'
 
 
 @threaded
@@ -100,9 +100,9 @@ def line_match(event, f, t, time=None, date=None, *args):
     r = cpsk.get_routes(f, t, vehicle=vehicle, time=time, date=date)
     if not len(r):
         f = imhdsk.clear_stop(imhdsk.suggest(
-                                rootify(f.split(' ')[0]))[0]['name'])
+                              rootify(f.split(' ')[0]))[0]['name'])
         t = imhdsk.clear_stop(imhdsk.suggest(
-                                rootify(t.split(' ')[0]))[0]['name'])
+                              rootify(t.split(' ')[0]))[0]['name'])
 
         r = imhdsk.routes(f, t, time=time, date=date)
 
