@@ -23,29 +23,6 @@ def rootify(word):
 
 
 @threaded
-@match(regex='.*bus (?:z|zo) (.+?) (?:do|na) (.+?)(?:\s|$)')
-def mhd_match(event, f, t, *args, **kwargs):
-    if f == t:
-        return "Not in this universe."
-
-    time = ''
-    date = ''
-    if len(args) >= 3:
-        time = args[2]
-    if len(args) >= 4:
-        date = args[3]
-
-    f = imhdsk.clear_stop(imhdsk.suggest(rootify(f.split(' ')[0]))[0]['name'])
-    t = imhdsk.clear_stop(imhdsk.suggest(rootify(t.split(' ')[0]))[0]['name'])
-
-    r = imhdsk.routes(f, t, time=time, date=date)
-
-    out = r[0].__repr__()
-    out = unicode(out.strip(codecs.BOM_UTF8), 'utf-8')
-    return out.encode('utf-8')
-
-
-@threaded
 @cmd
 def mhd(event):
     """Get the next BA MHD from A to B by running !mhd A B"""
@@ -83,47 +60,55 @@ def mhd(event):
     return out.encode('utf-8')
 
 
-CPSK_REGEX = r'(?:.*\s+|)(?:bus|vlak|spoj)\sz\s([A-Za-z\s]+)' \
-    '\sdo\s([A-Za-z\s]+)(?:.*\s+|)'
+TRAVEL_REGEX = r'(?:mhd|bus|vlak|spoj)\s(?:z|zo)\s([A-Za-z\s]+)' \
+    '\s(?:na|do)\s([A-Za-z\s]+)([0-9]+:[0-9]+)?(\s[0-9.]+)?'
 
 
 @threaded
-@match(regex=CPSK_REGEX)
-def cpsk_match(event, departure, dest, *args):
-    """Searches for bus or train info in Slovakia.
+@match(regex=TRAVEL_REGEX)
+def line_match(event, f, t, time=None, date=None, *args):
+    """Search for mhd in BA or bus/train lines in Slovakia
 
     Examples:
-        bus z BA do TO
-        najblizsi vlak z Topolcany do Prievidza
-        spoj z KE do Trencin
-        zajtra bus z TO do Jacovce
-        pozajtra o 20:30 bus z TO do BA
+        bus z mlyny na hlst
+        vlak z BA do TO
+        bus z BA do LM 18:00 20.12.2014
+        spoj zo Zochova no mlyny
     """
     msg = event.meta['body']
 
-    date = ''
-    if 'zajtra' in msg:
-        date = (datetime.date.today() + datetime.timedelta(days=1)) \
+    if f == t:
+        return "Not in this universe."
+
+    time = '' if time is None else time
+    date = '' if date is None else date
+
+    if ("zajtra" in msg or "pozajtra" in msg) and date is not '':
+        if "pozajtra" in msg:
+            delta = 2
+        elif "zajtra" in msg:
+            delta = 1
+        date = (datetime.date.today() + datetime.timedelta(days=delta)) \
             .strftime("%d.%m.%Y")
-    elif 'pozajtra' in msg:
-        date = (datetime.date.today() + datetime.timedelta(days=2)) \
-            .strftime("%d.%m.%Y")
 
-    time_match = re.search("([0-9]+:[0-9]+)", msg)
-    time = ''
-    if time_match is not None:
-        time = msg[time_match.start():time_match.end()]
+    vehicle = "vlakbus"
+    if "bus" in msg:
+        vehicle = "bus"
+    elif "vlak" in msg:
+        vehicle = "vlak"
 
-    vehicle = 'vlakbus'
-    if 'vlak' in msg:
-        vehicle = 'vlak'
-    elif 'bus' in msg:
-        vehicle = 'bus'
+    r = cpsk.get_routes(f, t, vehicle=vehicle, time=time, date=date)
+    if not len(r):
+        f = imhdsk.clear_stop(imhdsk.suggest(
+                                rootify(f.split(' ')[0]))[0]['name'])
+        t = imhdsk.clear_stop(imhdsk.suggest(
+                                rootify(t.split(' ')[0]))[0]['name'])
 
-    routes = cpsk.get_routes(departure, dest, vehicle=vehicle,
-                             time=time, date=date)
+        r = imhdsk.routes(f, t, time=time, date=date)
 
-    return routes[0].__repr__()
+    out = r[0].__repr__() if len(r) else "Nothing found"
+    out = unicode(out.strip(codecs.BOM_UTF8), 'utf-8')
+    return out.encode('utf-8')
 
 
 def get_line(event, vehicle):
@@ -153,10 +138,11 @@ def get_line(event, vehicle):
 @threaded
 @cmd
 def bus(event):
-    """Command for bus lines.
+    """Search for next bus line from A to B
 
     Examples:
         !bus BA TO
+        !bus Kosice - Bratislava - 19:00 - 20.12.2014
     """
 
     return get_line(event, 'bus')
@@ -165,10 +151,10 @@ def bus(event):
 @threaded
 @cmd
 def vlak(event):
-    """Command for train lines.
+    """Search for next train line from A to B
 
     Examples:
         !vlak Kosice Bratislava
-
+        !vlak Kosice - Bratislava - 19:00 - 20.12.2014
     """
     return get_line(event, 'vlak')
