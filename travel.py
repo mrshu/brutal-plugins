@@ -75,7 +75,7 @@ def line_match(event, f, t, time=None, date=None, *args):
         bus z BA do LM 18:00 20.12.2014
         spoj zo Zochova no mlyny
     """
-    msg = event.meta["body"]
+    msg = event.meta['body']
 
     if f == t:
         return "Not in this universe."
