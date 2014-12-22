@@ -28,6 +28,11 @@ def make(event):
 
 welcomes_db = {
     '#databazy': {
+        "lordpotato_":
+            "Everybody on your knees and let's praise the mighty Potato!",
+        "pepol": "Nazimod sighted, take cover!",
+        "mrshu": "Hide yo codes, hide yo wife, nazireviewer is on site!",
+        "jakubn": "Swiggidy swooty, he's comin' for dat booty!",
         "LordPotato_":
             "Everybody on your knees and let's praise the mighty Potato!",
         "pepol": "Nazimod sighted, take cover!",
@@ -43,6 +48,9 @@ def auto_welcome(event):
     if event.event_type == 'join':
         if event.source_room in welcomes_db:
             welcomes = welcomes_db[event.source_room]
+            # .lower() is a temporary fix for differences between lowercase 
+            # and uppercase name maching
+            if event.meta['nick'].lower() in welcomes:
             if event.meta['nick'] in welcomes:
                 return welcomes[event.meta['nick']]
         return event.meta['nick'] + ': hi!'
