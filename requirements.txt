@@ -2,3 +2,4 @@ readability-lxml
 requests
 cssselect
 cpsk
+pygeocoder
