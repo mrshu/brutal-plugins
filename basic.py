@@ -45,8 +45,10 @@ def auto_welcome(event):
             welcomes = welcomes_db[event.source_room]
             # .lower() is a temporary fix for differences between lowercase
             # and uppercase name maching
-            if event.meta['nick'].lower() in welcomes:
-                return welcomes[event.meta['nick']]
+            nick = event.meta['nick'].lower()
+
+            if nick in welcomes:
+                return welcomes[nick]
         return event.meta['nick'] + ': hi!'
 
 
