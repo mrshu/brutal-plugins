@@ -33,11 +33,6 @@ welcomes_db = {
         "pepol": "Nazimod sighted, take cover!",
         "mrshu": "Hide yo codes, hide yo wife, nazireviewer is on site!",
         "jakubn": "Swiggidy swooty, he's comin' for dat booty!",
-        "LordPotato_":
-            "Everybody on your knees and let's praise the mighty Potato!",
-        "pepol": "Nazimod sighted, take cover!",
-        "mrshu": "Hide yo codes, hide yo wife, nazireviewer is on site!",
-        "JakubN": "Swiggidy swooty, he's comin' for dat booty!",
         "kalerab": "Hide your apples, 'cause he's gonna eat 'em!"
     }
 }
