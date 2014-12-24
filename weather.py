@@ -48,7 +48,7 @@ class Wunderground:
         elif 'results' in r['response']:
             return self.retrieve('zmw:' + r['response']['results'][0]['zmw'],
                                  attempt+1)
-        # some cities are not recognized and have to have `/country` at the end
+        # some cities are not recognized and have to have `,country` at the end
         # or be searched based on latitude and longitude
         elif 'error' in r['response']:
             if attempt < 2:
@@ -103,14 +103,17 @@ class Weather(BotPlugin):
         if '-' in args:
             a = ' '.join(args)
             args = map(lambda x: x.strip(), a.split('-'))
-            dest = args[0]
-        else:
-            dest = ' '.join(args)
 
         try:
-            date = datetime.datetime.strptime(args[1], DATE_FORMAT)
+            # try to grab last argument, which can be date
+            # and squash other ones into destination
+            date = datetime.datetime.strptime(args[-1], DATE_FORMAT)
+            dest = ' '.join(args[:-1])
         except:
+            # if there is not date at the end, just use current one
+            # and squash all the arguments into destination
             date = datetime.datetime.today()
+            dest = ' '.join(args)
 
         curr_date = datetime.datetime.today()
         diff = (date - curr_date).days
