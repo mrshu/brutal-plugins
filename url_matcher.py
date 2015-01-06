@@ -4,7 +4,7 @@ import re
 
 from brutal.core.plugin import match, threaded
 
-URL_REGEX = '.*((:?https?|ftp)://[^\s/$.?#].[^\s]*).*'
+URL_REGEX = '.*((:?https?|ftp)://[^\s/$.?#].[^\s\x0f]*).*'
 TAG_RE = re.compile(r'<[^>]+>')
 WHITESPACE_RE = re.compile(r'\s\s+')
 
