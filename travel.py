@@ -158,3 +158,15 @@ def vlak(event):
         !vlak Kosice - Bratislava - 19:00 - 20.12.2014
     """
     return get_line(event, 'vlak')
+
+
+@threaded
+@cmd
+def spoj(event):
+    """Search for next means of transportation from A to B
+
+    Examples:
+        !spoj Kosice Bratislava
+        !spoj Kosice - Bratislava - 19:00 - 24.12.2014
+    """
+    return get_line(event, 'vlakbus')
