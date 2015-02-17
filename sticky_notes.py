@@ -27,10 +27,13 @@ class StickyNotes(BotPlugin):
 
     @event
     def send_notes(event):
+        format_note = lambda x, y: "{0}: {1}".format(x, y)
+
         if event.event_type == 'join':
             nick = event.meta['nick']
             if nick in self.notes:
                 last_note = self.notes[nick].pop()
-                for note in self.notes[nick]:
-                    self.msg(note, event=event)
-                return last_note
+                while len(self.notes[nick]) > 1:
+                    note = self.notes[nick].pop()
+                    self.msg(format_note(nick, note), event=event)
+                return format_note(nick, last_note)
