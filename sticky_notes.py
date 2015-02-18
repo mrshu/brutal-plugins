@@ -1,4 +1,4 @@
-from brutal.core.plugin import BotPlugin, cmd, match
+from brutal.core.plugin import BotPlugin, cmd, match, event
 
 
 class StickyNotes(BotPlugin):
@@ -21,17 +21,19 @@ class StickyNotes(BotPlugin):
         if user not in self.notes:
             self.notes[user] = []
 
-        self.notes[user].append("Note from {0}: {1}".format(user, content))
+        notes = self.notes[user]
+        notes.append("Note from {0}: {1}".format(event.meta['nick'], content))
+        self.notes[user] = notes
 
         return "Sticky note for {0} prepared.".format(user)
 
     @event
-    def send_notes(event):
+    def send_notes(self, event):
         format_note = lambda x, y: "{0}: {1}".format(x, y)
 
         if event.event_type == 'join':
             nick = event.meta['nick']
-            if nick in self.notes:
+            if nick in self.notes and len(self.notes[nick]) > 0:
                 last_note = self.notes[nick].pop()
                 while len(self.notes[nick]) > 1:
                     note = self.notes[nick].pop()
