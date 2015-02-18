@@ -85,4 +85,7 @@ def eval_(event):
     if len(input) < 1:
         return
 
-    return eval(input, {"__builtins__": None}, safe_dict)
+    try:
+        return eval(input, {"__builtins__": None}, safe_dict)
+    except Exception as e:
+        return "eval: {0}".format(e)
