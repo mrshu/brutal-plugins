@@ -22,7 +22,7 @@ class StickyNotes(BotPlugin):
             self.notes[user] = []
 
         notes = self.notes[user]
-        notes.append("Note from {0}: {1}".format(event.meta['nick'], content))
+        notes.append("{1} (sticky note from {0})".format(event.meta['nick'], content))
         self.notes[user] = notes
 
         return "Sticky note for {0} prepared.".format(user)
