@@ -22,7 +22,8 @@ class StickyNotes(BotPlugin):
             self.notes[user] = []
 
         notes = self.notes[user]
-        notes.append("Note from {0}: {1}".format(event.meta['nick'], content))
+        notes.append("{1} (sticky note from {0})".format(event.meta['nick'],
+                                                         content))
         self.notes[user] = notes
 
         return "Sticky note for {0} prepared.".format(user)
@@ -34,8 +35,10 @@ class StickyNotes(BotPlugin):
         if event.event_type == 'join':
             nick = event.meta['nick']
             if nick in self.notes and len(self.notes[nick]) > 0:
-                last_note = self.notes[nick].pop()
-                while len(self.notes[nick]) > 1:
-                    note = self.notes[nick].pop()
+                notes = self.notes[nick]
+                last_note = notes.pop()
+                while len(notes) > 1:
+                    note = notes.pop()
                     self.msg(format_note(nick, note), event=event)
+                self.notes[nick] = []
                 return format_note(nick, last_note)
