@@ -32,13 +32,17 @@ class StickyNotes(BotPlugin):
     def send_notes(self, event):
         format_note = lambda x, y: "{0}: {1}".format(x, y)
 
+        def sender(x):
+            return lambda: self.msg(x, event=event)
+
         if event.event_type == 'join':
             nick = event.meta['nick']
             if nick in self.notes and len(self.notes[nick]) > 0:
                 notes = self.notes[nick]
                 last_note = notes.pop()
-                while len(notes) > 1:
+                while len(notes) >= 1:
                     note = notes.pop()
-                    self.msg(format_note(nick, note), event=event)
+                    self.delay_task(len(notes),
+                                    sender(format_note(nick, note)))
                 self.notes[nick] = []
                 return format_note(nick, last_note)
