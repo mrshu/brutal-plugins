@@ -28,7 +28,7 @@ def make(event):
 
 welcomes_db = {
     '#databazy': {
-        "lordpotato_":
+        "lordpotato":
             "Everybody on your knees and let's praise the mighty Potato!",
         "pepol": "Nazimod sighted, take cover!",
         "mrshu": "Hide yo codes, hide yo wife, nazireviewer is on site!",
