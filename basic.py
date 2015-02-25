@@ -60,8 +60,10 @@ safe_list = ['acos', 'asin', 'atan', 'atan2', 'ceil', 'cos', 'cosh',
              'sinh', 'sqrt', 'tan', 'tanh']
 safe_dict = dict([(k, locals().get(k, None)) for k in safe_list])
 
-# abs is a global builtin function and so it is not in locals()
+# global builtin functions which are not in locals()
 safe_dict['abs'] = abs
+safe_dict['float'] = float
+safe_dict['int'] = int
 
 
 @cmd(command='eval')
