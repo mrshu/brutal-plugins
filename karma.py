@@ -42,8 +42,8 @@ class Karma(BotPlugin):
     def top_karma(self, event):
         """Get 5 people with most karma points."""
         output = ""
-        karmees = sorted([(value, key) for (key, value) in self.karmas.items()],
-                        reverse=True)
+        inverted = [(value, key) for (key, value) in self.karmas.items()]
+        karmees = sorted(inverted, reverse=True)
         # Takes top 5 or less if len(karmees) < 5
         karmees = karmees[:5]
 
