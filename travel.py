@@ -18,7 +18,7 @@ def rootify(word):
     vowels = ['a', 'e', 'i', 'o', 'u', 'y']
     for x in range(len(word)):
         if w[x] in vowels and x != 0:
-            return word[:-x-1]
+            return word[:-(x + 1)]
 
 
 @threaded
