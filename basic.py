@@ -52,7 +52,7 @@ def auto_welcome(event):
 
 
 # math functions need to be imported at runtime
-from math import *
+from math import *  # bypass_pyflakes
 safe_list = ['acos', 'asin', 'atan', 'atan2', 'ceil', 'cos', 'cosh',
              'degrees', 'e', 'exp', 'fabs', 'floor', 'fmod', 'frexp', 'hypot',
              'ldexp', 'log', 'log10', 'modf', 'pi', 'pow', 'radians', 'sin',
