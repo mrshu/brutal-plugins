@@ -1,5 +1,4 @@
-
-from brutal.core.plugin import BotPlugin, cmd, event, match, threaded
+from brutal.core.plugin import cmd, event
 
 
 @cmd
