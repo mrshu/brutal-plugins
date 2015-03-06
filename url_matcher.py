@@ -4,7 +4,7 @@ import re
 
 from brutal.core.plugin import match, threaded
 
-# the [^\s\x0f] at the end fixes IRC coloring issue, 
+# the [^\s\x0f] at the end fixes IRC coloring issue,
 # see https://github.com/mrshu/brutal-plugins/issues/38
 URL_REGEX = '.*((:?https?|ftp)://[^\s/$.?#].[^\s\x0f]*).*'
 TAG_RE = re.compile(r'<[^>]+>')

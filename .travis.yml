@@ -4,4 +4,4 @@ python:
 install:
   - pip install flake8 --use-mirrors
 script:
-  - flake8 .
+  - flake8 --ignore=E731,E226 .
