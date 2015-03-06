@@ -1,4 +1,4 @@
-from brutal.core.plugin import BotPlugin, cmd, match, event
+from brutal.core.plugin import BotPlugin, cmd, event
 
 
 class StickyNotes(BotPlugin):

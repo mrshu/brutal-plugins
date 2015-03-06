@@ -3,7 +3,6 @@ import cpsk
 from brutal.core.plugin import match, cmd, threaded
 import codecs
 import datetime
-import re
 import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
