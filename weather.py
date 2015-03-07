@@ -30,7 +30,7 @@ class Wunderground:
         self._features = ['conditions', 'forecast10day']
         self.lang = lang
         self.api_url = 'http://api.wunderground.com/api/{0}/' \
-                    '{1}/lang:{2}/q/{3}.json'
+                       '{1}/lang:{2}/q/{3}.json'
         self.country = country
 
     def retrieve(self, city, attempt=1):
@@ -47,7 +47,7 @@ class Wunderground:
         # zmw code, which is possible to search for city with
         elif 'results' in r['response']:
             return self.retrieve('zmw:' + r['response']['results'][0]['zmw'],
-                                 attempt+1)
+                                 attempt + 1)
         # some cities are not recognized and have to have `,country` at the end
         # or be searched based on latitude and longitude
         elif 'error' in r['response']:
@@ -55,22 +55,22 @@ class Wunderground:
                 loc = Geocoder.geocode(city)
                 return self.retrieve(','.join([str(loc[0].latitude),
                                                str(loc[0].longitude)]),
-                                     attempt+1)
+                                     attempt + 1)
             elif attempt < 3:
-                return self.retrieve(city + ',' + self.country, attempt+1)
+                return self.retrieve(city + ',' + self.country, attempt + 1)
             raise WeatherError(r['response']['error']['description'])
         else:
             return r
 
     def output(self, r, daydiff, format_str):
         """Return formated data"""
-        txt = r['forecast']['txt_forecast']['forecastday'] \
-                [(daydiff+1)*2]['fcttext_metric']
+        txt = r['forecast']['txt_forecast']['forecastday']
+        txt = txt[(daydiff + 1) * 2]['fcttext_metric']
 
         forecastday = r['forecast']['simpleforecast']['forecastday']
-        daytemp = forecastday[daydiff+1]['high']['celsius']
-        nighttemp = forecastday[daydiff+1]['low']['celsius']
-        avewind = str(forecastday[daydiff+1]['avewind']['kph'])
+        daytemp = forecastday[daydiff + 1]['high']['celsius']
+        nighttemp = forecastday[daydiff + 1]['low']['celsius']
+        avewind = str(forecastday[daydiff + 1]['avewind']['kph'])
         city = r['current_observation']['display_location']['city']
 
         data = {'city': city, 'daytemp': daytemp, 'nighttemp': nighttemp,
@@ -122,7 +122,7 @@ class Weather(BotPlugin):
             data = self._provider.retrieve(dest)
             fill = u'{city} -> Day: {daytemp}\u2103 ' \
                    u', Night: {nighttemp}\u2103 ' \
-                    ', Wind: {avewind} km/h ({txt})'
+                   ', Wind: {avewind} km/h ({txt})'
             return self._provider.output(data, diff, fill).encode('utf-8')
         except WeatherError as e:
             return str(e).encode('utf-8')
