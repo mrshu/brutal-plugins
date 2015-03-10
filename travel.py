@@ -1,6 +1,7 @@
 import imhdsk
 import cpsk
 from brutal.core.plugin import match, cmd, threaded
+from brutal.core.util import split_args_by
 import codecs
 import datetime
 import sys
@@ -34,8 +35,7 @@ def mhd(event):
     args = list(args)
 
     if '-' in args:
-        a = ' '.join(args)
-        args = map(lambda x: x.strip(), a.split('-'))
+        args = split_args_by(args, '-')
 
     f = args[0]
     t = args[1]
@@ -118,8 +118,7 @@ def get_line(event, vehicle):
         return
 
     if '-' in args:
-        a = ' '.join(args)
-        args = map(lambda x: x.strip(), a.split('-'))
+        args = split_args_by(args, '-')
 
     dep = args[0]
     dest = args[1]

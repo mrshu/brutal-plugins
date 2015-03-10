@@ -1,4 +1,5 @@
 from brutal.core.plugin import BotPlugin, threaded, cmd
+from brutal.core.util import split_args_by
 import requests
 import datetime
 from pygeocoder import Geocoder
@@ -101,8 +102,7 @@ class Weather(BotPlugin):
             return
 
         if '-' in args:
-            a = ' '.join(args)
-            args = map(lambda x: x.strip(), a.split('-'))
+            args = split_args_by(args, '-')
 
         try:
             # try to grab last argument, which can be date
