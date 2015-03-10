@@ -1,4 +1,5 @@
 from brutal.core.plugin import BotPlugin, cmd, match
+from brutal.core.utils import change_cmd
 
 
 class Karma(BotPlugin):
@@ -22,6 +23,11 @@ class Karma(BotPlugin):
             if name not in self.karmas:
                 self.karmas[name] = 0
             self.karmas[name] -= len(minuses)//2
+
+    @cmd
+    def krm(self, event):
+        evt = change_cmd(event, 'karma')
+        event.source_bot.new_event(evt)
 
     @cmd
     def karma(self, event):
