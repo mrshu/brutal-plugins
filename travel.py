@@ -1,7 +1,7 @@
 import imhdsk
 import cpsk
 from brutal.core.plugin import match, cmd, threaded
-from brutal.core.util import split_args_by
+from brutal.core.utils import split_args_by
 import codecs
 import datetime
 import sys

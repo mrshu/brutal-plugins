@@ -1,5 +1,5 @@
 from brutal.core.plugin import BotPlugin, threaded, cmd
-from brutal.core.util import split_args_by
+from brutal.core.utils import split_args_by
 import requests
 import datetime
 from pygeocoder import Geocoder
