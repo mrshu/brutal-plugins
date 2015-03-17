@@ -1,4 +1,5 @@
-from brutal.core.plugin import cmd, event
+from brutal.core.plugin import cmd, event, match
+import re
 
 
 @cmd
@@ -90,3 +91,45 @@ def eval_(event):
         return eval(input, {"__builtins__": None}, safe_dict)
     except Exception as e:
         return "eval: {0}".format(e)
+
+
+last_events = {}
+
+
+@event
+def sub_event_catcher(event):
+    if event.event_type in ['message', 'cmd']:
+        last_events[event.meta['host']] = event
+
+
+@match(regex=r'^s(.)(.*?)\1(.*?)(?:\1(.*?))?$')
+def sub_match(event, sep, pattern, replacement, flags, *args, **kwargs):
+    '''Matches any substitute string (as sed would), applies this substitution to
+    the user's last message and sents it back to processing.
+    '''
+    host = event.meta['host']
+    if host not in last_events:
+        return
+
+    if flags is None:
+        flags = ''
+
+    event = last_events[host]
+    details = event.raw_details
+    flag = 0
+    count = 1
+    if 'g' in flags:
+        count = 0
+    if 'i' in flags:
+        flag = re.IGNORECASE
+
+    details['meta']['body'] = re.sub(pattern,
+                                     replacement,
+                                     details['meta']['body'],
+                                     count,
+                                     flag)
+
+    evt = event.source_bot.build_event(details)
+    event.source_bot.new_event(evt)
+    return 'Reprocessing: {0}: {1}'.format(details['meta']['nick'],
+                                           details['meta']['body'])
