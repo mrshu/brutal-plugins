@@ -102,7 +102,7 @@ def sub_event_catcher(event):
         last_events[event.meta['host']] = event
 
 
-@match(regex=r'^s(.)(.*?)\1(.*?)(?:\1(.+?))?$')
+@match(regex=r'^s([^ a-zA-Z0-9])(.*?)\1(.*?)(?:\1(.+?))?$')
 def sub_match(event, sep, pattern, replacement, flags, *args, **kwargs):
     '''Matches any substitute string (as sed would), applies this substitution to
     the user's last message and sents it back to processing.
