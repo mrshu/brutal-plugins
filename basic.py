@@ -1,4 +1,5 @@
 from brutal.core.plugin import cmd, event, match
+from brutal.core.utils import change_cmd
 import re
 
 
@@ -143,3 +144,10 @@ def r(event):
         return
 
     event.source_bot.new_event(last_events[host])
+
+
+@cmd
+def redo(event):
+    '''Reprocess the last command or message recieved by a bot.'''
+    evt = change_cmd(event, 'r')
+    event.source_bot.new_event(evt)
