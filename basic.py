@@ -1,4 +1,5 @@
 from brutal.core.plugin import cmd, event, match
+from brutal.core.utils import change_cmd
 import re
 
 
@@ -133,3 +134,20 @@ def sub_match(event, sep, pattern, replacement, flags, *args, **kwargs):
     event.source_bot.new_event(evt)
     return 'Reprocessing: {0}: {1}'.format(details['meta']['nick'],
                                            details['meta']['body'])
+
+
+@cmd
+def r(event):
+    '''Reprocess the last command or message recieved by a bot.'''
+    host = event.meta['host']
+    if host not in last_events:
+        return
+
+    event.source_bot.new_event(last_events[host])
+
+
+@cmd
+def redo(event):
+    '''Reprocess the last command or message recieved by a bot.'''
+    evt = change_cmd(event, 'r')
+    event.source_bot.new_event(evt)
