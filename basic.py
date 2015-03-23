@@ -94,6 +94,7 @@ def eval_(event):
         return "eval: {0}".format(e)
 
 
+SED_REGEX = r'^s([^ a-zA-Z0-9])(.*?)\1(.*?)(?:\1(.+?))?$'
 last_events = {}
 
 
@@ -103,11 +104,11 @@ def sub_event_catcher(event):
         last_events[event.meta['host']] = event
 
 
-@match(regex=r'^s([^ a-zA-Z0-9])(.*?)\1(.*?)(?:\1(.+?))?$')
+@match(regex=SED_REGEX)
 def sub_match(event, sep, pattern, replacement, flags, *args, **kwargs):
     """Matches any substitute string (as sed would), applies this substitution to
-    the user's last message and sents it back to processing.
-    """
+    the user's last message and sends it back to processing."""
+
     host = event.meta['host']
     if host not in last_events:
         return
@@ -134,6 +135,17 @@ def sub_match(event, sep, pattern, replacement, flags, *args, **kwargs):
     event.source_bot.new_event(evt)
     return 'Reprocessing: {0}: {1}'.format(details['meta']['nick'],
                                            details['meta']['body'])
+
+
+@cmd
+def sub(event):
+    """Applies the 'sed' substitution defined in its arguments to the user's
+    last message and sends it back to processing."""
+
+    arg = ' '.join(event.args)
+    sed_args = re.match(SED_REGEX, arg)
+    if sed_args is not None:
+        return sub_match(event, *sed_args.groups())
 
 
 @cmd
