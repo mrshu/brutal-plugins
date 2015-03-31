@@ -47,11 +47,20 @@ class Karma(BotPlugin):
     @cmd
     def top_karma(self, event):
         """Get 5 people with most karma points."""
+        args = event.args
         output = ""
         inverted = [(value, key) for (key, value) in self.karmas.items()]
         karmees = sorted(inverted, reverse=True)
-        # Takes top 5 or less if len(karmees) < 5
-        karmees = karmees[:5]
+
+        n = 5
+        if len(args) > 0:
+            # Takes top 'n' or less if len(karmees) < n
+            try:
+                n = int(args[0])
+            except ValueError:
+                return "Argument must be a number!"
+
+        karmees = karmees[:n]
 
         for pos, (k, v) in enumerate(karmees, start=1):
             output += "{0}. {1} with {2}\n".format(pos, v, k)
