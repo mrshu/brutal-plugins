@@ -125,6 +125,7 @@ def sub_match(event, sep, pattern, replacement, flags, *args, **kwargs):
     if 'i' in flags:
         flag = re.IGNORECASE
 
+    pattern = re.escape(pattern)
     details['meta']['body'] = re.sub(pattern,
                                      replacement,
                                      details['meta']['body'],
