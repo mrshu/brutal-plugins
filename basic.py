@@ -94,7 +94,7 @@ def eval_(event):
         return "eval: {0}".format(e)
 
 
-SED_REGEX = r'^s([^ a-zA-Z0-9])(.*?)\1(.*?)(?:\1(.+?))?$'
+SED_REGEX = r'^s([^ a-zA-Z0-9])(.*?)\1(.*?)(?:\1(.+?|))?$'
 last_events = {}
 
 
@@ -125,6 +125,7 @@ def sub_match(event, sep, pattern, replacement, flags, *args, **kwargs):
     if 'i' in flags:
         flag = re.IGNORECASE
 
+    pattern = re.escape(pattern)
     details['meta']['body'] = re.sub(pattern,
                                      replacement,
                                      details['meta']['body'],
