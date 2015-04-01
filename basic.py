@@ -94,7 +94,7 @@ def eval_(event):
         return "eval: {0}".format(e)
 
 
-SED_REGEX = r'^s([^ a-zA-Z0-9])(.*?)\1(.*?)(?:\1(.+?))?$'
+SED_REGEX = r'^s([^ a-zA-Z0-9])(.*?)\1(.*?)(?:\1(.+?|))?$'
 last_events = {}
 
 
