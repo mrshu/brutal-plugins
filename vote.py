@@ -133,9 +133,10 @@ class Vote(BotPlugin):
 
     def question_result(self, event=None):
         """Return results of question"""
-        res = ''
-        for k, v in self.answers.iteritems():
-            res += '{0} -> {1}, '.format(v[0], v[1])
+        def format_answer(item):
+            return '{0} -> {1}'.format(*item)
+
+        res = ', '.join(list(map(format_answer, self.answers.values())))
 
         self.reset()
         return 'Results of {0}\'s question: {1}'.format(event.meta['nick'],
