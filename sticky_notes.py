@@ -1,10 +1,10 @@
 from brutal.core.plugin import BotPlugin, cmd, event
 
 
-class Note:
-    sender = ""
-    reciever = ""
-    msg = ""
+class Note(object):
+    sender = ''
+    reciever = ''
+    msg = ''
     time = None
 
     def __init__(self, sender, reciever, msg, time=None):
@@ -13,9 +13,11 @@ class Note:
         self.msg = msg
         self.time = time
 
+    def fmt(self, form="{msg} (sticky note from {sender})"):
+        return form.format(**self.__dict__)
+
     def __str__(self):
-        return "{0}: {1} (sticky note from {2})".format(self.reciever,
-                                                        self.msg, self.sender)
+        return self.fmt("{receiver}: {msg} (sticky note from {sender})")
 
 
 class StickyNotes(BotPlugin):
@@ -69,6 +71,7 @@ class StickyNotes(BotPlugin):
         """
         args = event.args
         format_note = lambda x, y: "{0}. {1}".format(x, y)
+        LISTING_FORMAT = "{msg} (from {sender})"
 
         if len(args) == 0:
             return 'I have sticky notes for: ' + ', '.join(self.notes.keys())
@@ -76,8 +79,8 @@ class StickyNotes(BotPlugin):
         if len(args) == 1:
             nick = args[0]
             user_notes = self.notes[nick]
-            first_note = format_note(1, user_notes.pop(0))
-            for index, note in enumerate(user_notes, start=2):
-                self.delay_task(index,
-                                self.sender(format_note(index, note), event))
+            first_note = format_note(1, user_notes.pop(0).fmt(LISTING_FORMAT))
+            for i, note in enumerate(user_notes, start=2):
+                note_str = format_note(i, note.fmt(LISTING_FORMAT))
+                self.delay_task(i, self.sender(note_str, event))
             return first_note
