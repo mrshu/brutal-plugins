@@ -1,6 +1,23 @@
 from brutal.core.plugin import BotPlugin, cmd, event
 
 
+class Note:
+    sender = ""
+    reciever = ""
+    msg = ""
+    time = None
+
+    def __init__(self, sender, reciever, msg, time=None):
+        self.sender = sender
+        self.reciever = reciever
+        self.msg = msg
+        self.time = time
+
+    def __str__(self):
+        return "{0}: {1} (sticky note from {2})".format(self.reciever,
+                                                        self.msg, self.sender)
+
+
 class StickyNotes(BotPlugin):
     def setup(self, *args, **kwargs):
         self.notes = self.open_storage('sticky_notes')
@@ -18,23 +35,21 @@ class StickyNotes(BotPlugin):
         elif len(args) < 2:
             return "Sticky note needs to contain some actual note."
         else:
-            user = event.args[0]
-            content = ' '.join(event.args[1:])
+            to_nick = event.args[0]
+            from_nick = event.meta['nick']
+            msg = ' '.join(event.args[1:])
 
-        if user not in self.notes:
-            self.notes[user] = []
+        if to_nick not in self.notes:
+            self.notes[to_nick] = []
 
-        notes = self.notes[user]
-        notes.append("{1} (sticky note from {0})".format(event.meta['nick'],
-                                                         content))
-        self.notes[user] = notes
+        notes = self.notes[to_nick]
+        notes.append(Note(from_nick, to_nick, msg))
+        self.notes[to_nick] = notes
 
-        return "Sticky note for {0} prepared.".format(user)
+        return "Sticky note for {0} prepared.".format(to_nick)
 
     @event
     def send_notes(self, event):
-        format_note = lambda x, y: "{0}: {1}".format(x, y)
-
         if event.event_type not in ['quit', 'part', 'kick']:
             nick = event.meta['nick']
             if nick in self.notes and len(self.notes[nick]) > 0:
@@ -42,11 +57,9 @@ class StickyNotes(BotPlugin):
                 last_note = notes.pop()
                 while len(notes) >= 1:
                     note = notes.pop()
-                    self.delay_task(len(notes),
-                                    self.sender(format_note(nick, note),
-                                                event))
+                    self.delay_task(len(notes), self.sender(note), event)
                 self.notes[nick] = []
-                return format_note(nick, last_note)
+                return last_note
 
     @cmd
     def list_stickynotes(self, event):
