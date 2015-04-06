@@ -74,7 +74,11 @@ class StickyNotes(BotPlugin):
         LISTING_FORMAT = "{msg} (from {sender})"
 
         if len(args) == 0:
-            return 'I have sticky notes for: ' + ', '.join(self.notes.keys())
+            nicks = filter(lambda x: self.notes[x] != [], self.notes.keys())
+            if len(nicks) > 0:
+                return 'I have sticky notes for: {0}'.format(', '.join(nicks))
+            else:
+                return 'No sticky notes prepared.'
 
         if len(args) == 1:
             nick = args[0]
