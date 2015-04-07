@@ -14,6 +14,11 @@ WHITESPACE_RE = re.compile(r'\s\s+')
 @threaded
 @match(regex=URL_REGEX)
 def url_matcher(event, url, *args, **kwargs):
+    r = requests.head(url)
+    # files that are too big cause trouble. Let's just ignore them.
+    if r.headers['content-length'] > 5e6:
+        return
+
     html = requests.get(url).text
     readable_article = Document(html).summary().encode("utf-8")
     readable_article = TAG_RE.sub('', readable_article)
