@@ -88,3 +88,44 @@ class StickyNotes(BotPlugin):
                 note_str = format_note(i, note.fmt(LISTING_FORMAT))
                 self.delay_task(i, self.sender(note_str, event))
             return first_note
+
+    @cmd
+    def del_stickynote(self, event):
+        args = event.args
+        from_nick = event.meta['nick']
+
+        if len(args) < 1:
+            return "Missing nick argument."
+
+        if len(args) < 2:
+            return "Missing stickynote number argument."
+
+        nick = args[0]
+        note_num = args[1]
+
+        if nick not in self.notes:
+            return "No stickynotes for " + nick
+        notes = self.notes[nick]
+
+        if not note_num.isdigit() and note_num != 'last':
+            return "Invalid stickynote number argument."
+
+        if note_num == 'last':
+            note_num = -1
+        else:
+            note_num = int(note_num)
+
+        if note_num >= len(notes):
+            return "User doesn't have that many stickynotes."
+
+        if from_nick != notes[note_num].sender:
+            return "Stickynote {0} isn't from you {1}.".format(note_num,
+                                                               from_nick)
+
+        notes.pop(note_num)
+        self.notes[nick] = notes
+
+        if not self.notes[nick]:
+            del self.notes[nick]
+
+        return "Stickynote deleted."
