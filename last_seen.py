@@ -45,7 +45,7 @@ class LastSeen(BotPlugin):
                 msg = '{0} {1}'.format(minutes, min_format)
             else:
                 msg = 'less than a minute'
-            return '{0} was last seen {1} ago ({0})'.format(user, msg, evt)
+            return '{0} was last seen {1} ago ({2})'.format(user, msg, evt)
 
         time = time.strftime('%d.%m.%Y %H:%M')
         return '{0} was last seen at {1} UTC ({2})'.format(user, time, evt)
