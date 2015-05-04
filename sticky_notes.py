@@ -3,13 +3,13 @@ from brutal.core.plugin import BotPlugin, cmd, event
 
 class Note(object):
     sender = ''
-    reciever = ''
+    receiver = ''
     msg = ''
     time = None
 
-    def __init__(self, sender, reciever, msg, time=None):
+    def __init__(self, sender, receiver, msg, time=None):
         self.sender = sender
-        self.reciever = reciever
+        self.receiver = receiver
         self.msg = msg
         self.time = time
 
