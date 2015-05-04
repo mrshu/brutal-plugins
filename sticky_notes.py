@@ -2,11 +2,6 @@ from brutal.core.plugin import BotPlugin, cmd, event
 
 
 class Note(object):
-    sender = ''
-    receiver = ''
-    msg = ''
-    time = None
-
     def __init__(self, sender, receiver, msg, time=None):
         self.sender = sender
         self.receiver = receiver
@@ -54,13 +49,13 @@ class StickyNotes(BotPlugin):
     def send_notes(self, event):
         if event.event_type not in ['quit', 'part', 'kick']:
             nick = event.meta['nick']
-            if nick in self.notes and len(self.notes[nick]) > 0:
+            if nick in self.notes:
                 notes = self.notes[nick]
                 last_note = notes.pop()
                 while len(notes) >= 1:
                     note = notes.pop()
                     self.delay_task(len(notes), self.sender(note), event)
-                self.notes[nick] = []
+                del self.notes[nick]
                 return last_note
 
     @cmd
@@ -80,8 +75,8 @@ class StickyNotes(BotPlugin):
             else:
                 return 'No sticky notes prepared.'
 
-        if len(args) == 1:
-            nick = args[0]
+        nick = args[0]
+        if len(args) == 1 and nick in self.notes:
             user_notes = self.notes[nick]
             first_note = format_note(1, user_notes.pop(0).fmt(LISTING_FORMAT))
             for i, note in enumerate(user_notes, start=2):
@@ -110,10 +105,7 @@ class StickyNotes(BotPlugin):
         if not note_num.isdigit() and note_num != 'last':
             return "Invalid stickynote number argument."
 
-        if note_num == 'last':
-            note_num = -1
-        else:
-            note_num = int(note_num)
+        note_num = -1 if note_num == 'last' else int(note_num)
 
         if note_num >= len(notes):
             return "User doesn't have that many stickynotes."
