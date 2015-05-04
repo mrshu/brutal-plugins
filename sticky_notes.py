@@ -25,7 +25,7 @@ class StickyNotes(BotPlugin):
         self.notes = self.open_storage('sticky_notes')
 
     def sender(self, x, event):
-        return lambda: self.msg(x, event=event)
+        return lambda: self.msg(str(x), event=event)
 
     @cmd
     def stickynote(self, event):
