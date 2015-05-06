@@ -16,7 +16,7 @@ WHITESPACE_RE = re.compile(r'\s\s+')
 def url_matcher(event, url, *args, **kwargs):
     r = requests.head(url)
     # files that are too big cause trouble. Let's just ignore them.
-    if r.headers['content-length'] > 5e6:
+    if 'content-length' in r.headers and r.headers['content-length'] > 5e6:
         return
 
     html = requests.get(url).text
