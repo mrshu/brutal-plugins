@@ -1,7 +1,7 @@
 readability-lxml
 requests
 cssselect
-cpsk
+cpsk==0.1.0
 pygeocoder
 brutal-ng==0.3.9
 imhdsk
