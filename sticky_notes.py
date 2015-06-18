@@ -32,9 +32,9 @@ class StickyNotes(BotPlugin):
         elif len(args) < 2:
             return "Sticky note needs to contain some actual note."
         else:
-            to_nick = event.args[0]
+            to_nick = args[0]
             from_nick = event.meta['nick']
-            msg = ' '.join(event.args[1:])
+            msg = ' '.join(args[1:])
 
         if to_nick not in self.notes:
             self.notes[to_nick] = []
