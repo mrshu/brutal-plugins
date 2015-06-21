@@ -1,6 +1,8 @@
 from brutal.core.plugin import BotPlugin, cmd, event
 from datetime import datetime
 
+USAGE_STR = 'Nick not specified. (usage: {cmd}last_seen <nick>)'
+
 
 class LastSeen(BotPlugin):
     def setup(self, *args, **kwargs):
@@ -22,8 +24,7 @@ class LastSeen(BotPlugin):
         """
         args = event.args
         if len(args) < 1:
-            return 'Nick not specified. (usage: {0}last_seen <nick>)'.format(
-                    event.source_bot.command_token)
+            return USAGE_STR.format(cmd=event.source_bot.command_token)
         user = args[0]
 
         if user not in self.seen:
