@@ -9,6 +9,46 @@ reload(sys)
 sys.setdefaultencoding("utf-8")
 
 
+# 'nick' : ['dep', 'dest', 'time', 'date']
+searched = {}
+
+
+def send_output(nick, dep, dest, date, result=None):
+    """Sends output"""
+    out = 'Nothing found'
+
+    if date == '':
+        date = datetime.datetime.today().strftime('%d.%m.%Y')
+
+    if len(result) >= 1:
+        out = result[0].__repr__()
+        obj = result[0]
+
+        if hasattr(obj, 'lines') and len(obj.lines) >= 1:
+            time = obj.lines[0].departure
+        elif hasattr(result[0], 'drives') and len(obj.drives) >= 1:
+            time = result[0].drives[0].begin_time
+        searched[nick] = [dep, dest, time, date]
+
+    out = unicode(out.strip(codecs.BOM_UTF8), 'utf-8')
+    return out.encode('utf-8')
+
+
+def searched_incrementer(nick):
+    """Adds 1 minute to previous search departure"""
+    dep, dest, time, date = searched[nick]
+
+    dateobj = datetime.datetime.strptime('{0}-{1}'.format(time,
+                                                          date),
+                                         '%H:%M-%d.%m.%Y')
+    dateobj += datetime.timedelta(seconds=60)
+    date = dateobj.strftime('%d.%m.%Y')
+    time = dateobj.strftime('%H:%M')
+
+    searched[nick] = [dep, dest, time, date]
+    return searched[nick]
+
+
 def rootify(word):
     """Return probable root of the word."""
 
@@ -29,8 +69,13 @@ def mhd(event):
 
     args = event.args
 
+    if len(args) >= 1 and args[0] == 'next':
+        if not event.meta['nick'] in searched:
+            return 'No next line'
+        args = searched_incrementer(event.meta['nick'])
+
     if len(args) < 2:
-        return
+        return 'Not enough arguments specified. See !help mhd for usage'
 
     args = list(args)
 
@@ -41,7 +86,7 @@ def mhd(event):
     t = args[1]
 
     if f == t:
-        return "Not in this universe."
+        return 'Not in this universe.'
 
     time = ''
     date = ''
@@ -54,9 +99,7 @@ def mhd(event):
     if len(r) == 0:
         return
 
-    out = r[0].__repr__()
-    out = unicode(out.strip(codecs.BOM_UTF8), 'utf-8')
-    return out.encode('utf-8')
+    return send_output(event.meta['nick'], f, t, date, result=r)
 
 
 TRAVEL_REGEX = r'(?:mhd|bus|vlak|spoj)\s(?:z|zo)\s([A-Za-z\s]+)' \
@@ -77,24 +120,24 @@ def line_match(event, f, t, time=None, date=None, *args):
     msg = event.meta['body']
 
     if f == t:
-        return "Not in this universe."
+        return 'Not in this universe.'
 
     time = '' if time is None else time
     date = '' if date is None else date
 
-    if ("zajtra" in msg or "pozajtra" in msg) and date is not '':
-        if "pozajtra" in msg:
+    if ('zajtra' in msg or 'pozajtra' in msg) and date is not '':
+        if 'pozajtra' in msg:
             delta = 2
-        elif "zajtra" in msg:
+        elif 'zajtra' in msg:
             delta = 1
         date = (datetime.date.today() + datetime.timedelta(days=delta)) \
             .strftime("%d.%m.%Y")
 
-    vehicle = "vlakbus"
-    if "bus" in msg:
+    vehicle = 'vlakbus'
+    if 'bus' in msg:
         vehicle = "bus"
-    elif "vlak" in msg:
-        vehicle = "vlak"
+    elif 'vlak' in msg:
+        vehicle = 'vlak'
 
     r = cpsk.get_routes(f, t, vehicle=vehicle, time=time, date=date)
     if not len(r):
@@ -105,18 +148,19 @@ def line_match(event, f, t, time=None, date=None, *args):
 
         r = imhdsk.routes(f, t, time=time, date=date)
 
-    out = r[0].__repr__() if len(r) else "Nothing found"
-    out = unicode(out.strip(codecs.BOM_UTF8), 'utf-8')
-    return out.encode('utf-8')
+    return send_output(event.meta['nick'], f, t, date, result=r)
 
 
 def get_line(event, vehicle):
     """Searches for bus/train based on given vehicle argument"""
     args = event.args
+    if len(args) >= 1 and args[0] == 'next':
+        if not event.meta['nick'] in searched:
+            return 'No next line'
+        args = searched_incrementer(event.meta['nick'])
 
     if len(args) < 2:
-        return
-
+        return 'Not enough arguments specified. See !help for usage'
     if '-' in args:
         args = split_args_by(args, '-')
 
@@ -130,7 +174,7 @@ def get_line(event, vehicle):
         return "You joker"
 
     r = cpsk.get_routes(dep, dest, vehicle=vehicle, time=time, date=date)
-    return r[0].__repr__() if len(r) else "Nothing found"
+    return send_output(event.meta['nick'], dep, dest, date, result=r)
 
 
 @threaded
