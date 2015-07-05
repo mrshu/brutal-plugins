@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from brutal.core.plugin import cmd
-from datetime import datetime
+from datetime import datetime, date
 from calendar import isleap
 
 from pynameday.slovakia import Slovakia as sknameday
@@ -76,13 +76,13 @@ def dayinfo(event):
         !dayinfo 24.12.2015
     """
     args = event.args
+    today = date.today()
     if len(args) == 1:
         try:
-            today = datetime.strptime(event.args[0], DATE_FORMAT)
+            today_s = datetime.strptime(args[0], DATE_FORMAT)
         except ValueError:
             return 'Not a valid date'
-    else:
-        today = datetime.today()
+        today = date(today_s.year, today_s.month, today_s.day)
 
     day = today.day
     month = today.month
