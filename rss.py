@@ -33,7 +33,7 @@ class RSSPlugin(BotPlugin):
                 if entry.id == last_id:
                     break
 
-                if i >= self.max_stories:
+                if i > self.max_stories:
                     break
 
                 self.delay_task(i, self.sender(d, entry))
