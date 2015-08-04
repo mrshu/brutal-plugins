@@ -1,6 +1,7 @@
 from brutal.core.plugin import BotPlugin
 from pyshorteners.shorteners import Shortener
 import feedparser
+import hashlib
 
 
 class RSSPlugin(BotPlugin):
@@ -17,30 +18,41 @@ class RSSPlugin(BotPlugin):
 
         for feed in self.feeds:
             if feed not in self.storage:
-                self.storage[feed] = ''
+                self.storage[feed] = []
         self.loop_task(self.update_interval, self.check_feeds, now=False)
 
+    def hash_entry(self, entry):
+        """Creates a hash out of the feedparser's Entry. Uses just the title
+        and the link as that is what we care about in most cases."""
+        return hashlib.sha224("{}{}".format(entry.title,
+                                            entry.link)).hexdigest()
+
     def check_feeds(self):
+        """"Periodically checks for new entries in given (configured) feeds."""
         for feed in self.feeds:
             d = feedparser.parse(feed)
-            last_id = self.storage[feed]
-            first_id = None
+            past_entries = self.storage[feed]
 
-            for i, entry in enumerate(d.entries, start=1):
-                if first_id is None:
-                    first_id = entry.id
-
-                if entry.id == last_id:
-                    break
+            i = 1
+            for entry in d.entries:
+                hash = self.hash_entry(entry)
+                if hash in past_entries:
+                    continue
 
                 if i > self.max_stories:
                     break
 
                 self.delay_task(i, self.sender(d, entry))
-            self.storage[feed] = first_id
+                i += 1
+                past_entries.insert(0, hash)
+            self.storage[feed] = past_entries
         return ''
 
     def sender(self, d, entry):
+        """A helper function that takes care of sending the entry that we
+        regard as 'new' to proper places. Moreover, it takes care of formatting
+        the raw entry into textual representation and shortening the entry
+        link if it is too long."""
         link = entry.link
         if len(link) > self.max_link_length:
             link = self.shortener.short(link)
