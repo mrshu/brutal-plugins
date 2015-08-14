@@ -13,6 +13,7 @@ class RSSPlugin(BotPlugin):
         self.max_stories = int(self.config.get('max_stories', 5))
         self.update_interval = int(self.config.get('update_interval', 30))
         self.max_link_length = int(self.config.get('max_link_length', 50))
+        self.entry_cache_size = int(self.config.get('entry_cache_size', 100))
 
         self.shortener = Shortener('IsgdShortener')
 
@@ -45,7 +46,7 @@ class RSSPlugin(BotPlugin):
                 self.delay_task(i, self.sender(d, entry))
                 i += 1
                 past_entries.insert(0, hash)
-            self.storage[feed] = past_entries
+            self.storage[feed] = past_entries[:self.entry_cache_size]
         return ''
 
     def sender(self, d, entry):
