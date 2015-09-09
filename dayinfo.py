@@ -67,6 +67,38 @@ def formatter(string, prefix=''):
     return ''
 
 
+def validate_date(date_string):
+    """Validates given date and returns date object"""
+    try:
+        valid = datetime.strptime(date_string, DATE_FORMAT)
+    except ValueError:
+        return None
+    return date(valid.year, valid.month, valid.day)
+
+
+@cmd
+def nameday(event):
+    """Return current nameday
+
+    Examples:
+        !nameday
+        !nameday 24.12.2015
+    """
+    args = event.args
+    today = date.today()
+    if len(args) == 1:
+        today = validate_date(args[0])
+        if today is None:
+            return 'Not a valid date'
+
+    names = sknameday()
+    name = names.get_nameday(month=today.month, day=today.day)
+
+    if name is None:
+        return "Noone's got nameday"
+    return name
+
+
 @cmd
 def dayinfo(event):
     """Informs you about current day
@@ -78,11 +110,9 @@ def dayinfo(event):
     args = event.args
     today = date.today()
     if len(args) == 1:
-        try:
-            today_s = datetime.strptime(args[0], DATE_FORMAT)
-        except ValueError:
+        today = validate_date(args[0])
+        if today is None:
             return 'Not a valid date'
-        today = date(today_s.year, today_s.month, today_s.day)
 
     day = today.day
     month = today.month
