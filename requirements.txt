@@ -9,3 +9,4 @@ workalendar
 pynameday
 feedparser
 pyshorteners
+hladny_matfyzak
